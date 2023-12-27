@@ -12,5 +12,5 @@ In this particular example we read the UserID and process ID whenever "execve" i
 
 ## Hello-ring-buf.py
 This example uses BPF ring buffer which is a improved version of perf buffer. The perf buf has respective buffers attached to CPU cores. Whereas in BPF rung buffer is a common buffer shared between all the CPU cores.
-In this example we read the PID and User Id for each "execve" call made on the system.
+In this example we read the command used, message, PID and User Id for each "execve" call made on the system.
 
