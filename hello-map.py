@@ -19,8 +19,17 @@ program = r"""
         return 0;
     }"""
 b = BPF(text=program)
-syscall = b.get_syscall_fnname("execve")
-b.attach_kprobe(event=syscall, fn_name="hello")
+syscall_execve = b.get_syscall_fnname("execve")
+syscall_openat = b.get_syscall_fnname("openat")
+syscall_write = b.get_syscall_fnname("write")
+b.attach_kprobe(event=syscall_execve, fn_name="hello")
+b.attach_kprobe(event=syscall_openat, fn_name="hello")
+b.attach_kprobe(event=syscall_write, fn_name="hello")
+
+#print("The function name of %s in kernel is %s" % ("execve", b.get_syscall_fnname("execve")))
+#print("The function name of %s in kernel is %s" % ("openat", b.get_syscall_fnname("openat")))
+#print("The function name of %s in kernel is %s" % ("write", b.get_syscall_fnname("write")))
+
 
 while True:
     sleep(2)
