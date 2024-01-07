@@ -3,13 +3,12 @@ import ctypes as ct
 
 program = r"""
     BPF_PROG_ARRAY(syscall, 300);
-    
-    int hello(struct bpf_raw_tracepoint_args *ctx) {
-        int opcode = ctx->args[1];
-        syscall.call(ctx,opcode);
-        bpf_trace_printk("Another syscall: %d", opcode);
+
+    RAW_TRACEPOINT_PROBE(sys_enter) {
+        bpf_trace_printk("Hello from tracepoint\\n");
         return 0;
     }
+
     
     int hello_execve(void*ctx) {
         bpf_trace_printk("Executing a program");
@@ -32,8 +31,7 @@ program = r"""
     }"""
 
 b = BPF(text=program)
-b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
-
+#b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
 ignore_fn = b.load_func("ignore_opcode", BPF.RAW_TRACEPOINT)
 exec_fn = b.load_func("hello_execve", BPF.RAW_TRACEPOINT)
 timer_fn = b.load_func("hello_timer",BPF.RAW_TRACEPOINT)
